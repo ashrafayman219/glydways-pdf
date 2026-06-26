@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glydways – West Palm Beach</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 100%; height: 100%;
+    overflow: hidden;
+    background: #000;
+    font-family: system-ui, sans-serif;
+  }
+
+  .wrap {
+    position: absolute;
+    inset: 0;
+    background: #111;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Top overlay bar */
+  .overlay-top {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    padding: 1.4rem 1.4rem 3.5rem;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.72) 0%, transparent 100%);
+    pointer-events: none;
+    z-index: 10;
+  }
+  .overlay-top p {
+    font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+    color: rgba(255,255,255,.5); margin: 0 0 4px;
+  }
+  .overlay-top h1 {
+    font-size: 22px; font-weight: 500; color: #fff; margin: 0;
+    line-height: 1.3;
+  }
+
+  /* PDF iframe fills the space */
+  .pdf-frame {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+    opacity: 0;
+    transition: opacity 1.2s ease;
+  }
+  .pdf-frame.ready { opacity: 1; }
+
+  /* Bottom controls bar */
+  .overlay-bottom {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 3rem 1.2rem 1rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.72) 0%, transparent 100%);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 10;
+    pointer-events: none;
+  }
+
+  .badge {
+    font-size: 10px; letter-spacing: .07em;
+    background: rgba(255,255,255,.1); color: rgba(255,255,255,.6);
+    padding: 3px 8px; border-radius: 99px;
+    border: .5px solid rgba(255,255,255,.2);
+    pointer-events: none;
+  }
+
+  .spacer { flex: 1; }
+
+  .ctrl {
+    background: none; border: none; cursor: pointer; padding: 4px;
+    color: rgba(255,255,255,.85); display: flex; align-items: center;
+    border-radius: 4px; pointer-events: all;
+  }
+  .ctrl:hover { color: #fff; }
+
+  /* Fallback message if PDF fails */
+  .fallback {
+    display: none;
+    position: absolute;
+    inset: 0;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+    color: rgba(255,255,255,.6);
+    font-size: 14px;
+    text-align: center;
+    padding: 2rem;
+    z-index: 5;
+  }
+  .fallback.visible { display: flex; }
+  .fallback a {
+    color: #fff;
+    font-size: 13px;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    border: .5px solid rgba(255,255,255,.3);
+    padding: 8px 20px;
+    border-radius: 99px;
+    text-decoration: none;
+    transition: background .2s;
+  }
+  .fallback a:hover { background: rgba(255,255,255,.1); }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <iframe
+    id="pdfFrame"
+    class="pdf-frame"
+    src="https://ddecamerica.github.io/the-future-of-mobility/storymap-assets/assets/glydways/files/glydways-west-palm-beach-one-pager.pdf"
+    title="Glydways West Palm Beach One-Pager"
+    allowfullscreen
+  ></iframe>
+
+  <!-- shown if iframe PDF doesn't load (e.g. mobile Safari) -->
+  <div class="fallback" id="fallback">
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="rgba(255,255,255,.4)"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+    <span>PDF preview unavailable in this browser</span>
+    <a href="https://ddecamerica.github.io/the-future-of-mobility/storymap-assets/assets/glydways/files/glydways-west-palm-beach-one-pager.pdf" target="_blank" rel="noopener">Open PDF ↗</a>
+  </div>
+
+  <div class="overlay-top">
+    <p>One-Pager</p>
+    <h1>Glydways – West Palm Beach</h1>
+  </div>
+
+  <div class="overlay-bottom">
+    <span class="badge">PDF</span>
+    <span class="spacer"></span>
+    <!-- Open in new tab -->
+    <a
+      href="https://ddecamerica.github.io/the-future-of-mobility/storymap-assets/assets/glydways/files/glydways-west-palm-beach-one-pager.pdf"
+      target="_blank" rel="noopener"
+      class="ctrl"
+      aria-label="Open PDF in new tab"
+      style="text-decoration:none;"
+    >
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M19 19H5V5h7V3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+    </a>
+    <!-- Fullscreen -->
+    <button class="ctrl" id="fsBtn" aria-label="Fullscreen">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>
+    </button>
+  </div>
+
+</div>
+
+<script>
+  const frame = document.getElementById('pdfFrame');
+  const fallback = document.getElementById('fallback');
+  const fsBtn = document.getElementById('fsBtn');
+
+  // Fade in once iframe reports load
+  frame.addEventListener('load', () => {
+    frame.classList.add('ready');
+  });
+
+  // Safety net: if load doesn't fire in 5s on mobile, show fallback
+  const timer = setTimeout(() => {
+    if (!frame.classList.contains('ready')) {
+      frame.style.display = 'none';
+      fallback.classList.add('visible');
+    }
+  }, 5000);
+
+  frame.addEventListener('load', () => clearTimeout(timer));
+
+  // Fullscreen
+  fsBtn.addEventListener('click', () => {
+    if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+      const el = document.documentElement;
+      if (el.requestFullscreen) el.requestFullscreen();
+      else if (el.webkitRequestFullscreen) el.webkitRequestFullscreen();
+    } else {
+      if (document.exitFullscreen) document.exitFullscreen();
+      else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+    }
+  });
+
+  document.addEventListener('fullscreenchange', () => {
+    const inFS = !!document.fullscreenElement;
+    fsBtn.querySelector('svg').innerHTML = inFS
+      ? '<path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/>'
+      : '<path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/>';
+  });
+</script>
+</body>
+</html>
